@@ -1,11 +1,6 @@
-const dotenv = require("dotenv");
-dotenv.config();
-
-const connectDB = require("./config/db");
+require("dotenv").config();
 const app = require("./app");
-const authRoutes = require("./routes/auth");
-
-app.use("/api/auth", authRoutes);
+const connectDB = require("./config/db");
 
 connectDB().then(() => {
   const PORT = process.env.PORT || 5000;
