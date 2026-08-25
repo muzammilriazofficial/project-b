@@ -1,7 +1,8 @@
-const connectDB = require("../src/config/db");
-const app = require("../src/server");
+const app = require("./app");
+const authRoutes = require("./routes/auth");
+const withDB = require("./middleware/db");
 
-module.exports = async (req, res) => {
-  await connectDB();
-  return app(req, res);
-};
+app.use(withDB);
+app.use("/api/auth", authRoutes);
+
+module.exports = app;
