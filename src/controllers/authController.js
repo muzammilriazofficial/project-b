@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const connectDB = require("../config/db");
 
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
@@ -9,6 +10,7 @@ const generateToken = (userId) => {
 
 const register = async (req, res) => {
   try {
+    await connectDB();
     const { name, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
@@ -30,6 +32,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
+    await connectDB();
     const { email, password } = req.body;
 
     const user = await User.findOne({ email }).select("+password");
@@ -55,6 +58,7 @@ const login = async (req, res) => {
 
 const getMe = async (req, res) => {
   try {
+    await connectDB();
     const user = await User.findById(req.user.id);
     res.status(200).json({ id: user._id, name: user.name, email: user.email });
   } catch (error) {
