@@ -1,3 +1,4 @@
+require("dotenv").config();
 const connectDB = require("../src/config/db");
 const User = require("../src/models/User");
 const jwt = require("jsonwebtoken");
@@ -17,12 +18,20 @@ module.exports = async (req, res) => {
     return res.status(200).json({ message: "API is running" });
   }
 
+  let body = {};
+  if (req.body) {
+    body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  }
+
   try {
     await connectDB();
 
     if (method === "POST" && url === "/api/auth/register") {
-      const body = JSON.parse(req.body || "{}");
       const { name, email, password } = body;
+
+      if (!name || !email || !password) {
+        return res.status(400).json({ message: "All fields are required" });
+      }
 
       const existingUser = await User.findOne({ email });
       if (existingUser) {
@@ -39,8 +48,11 @@ module.exports = async (req, res) => {
     }
 
     if (method === "POST" && url === "/api/auth/login") {
-      const body = JSON.parse(req.body || "{}");
       const { email, password } = body;
+
+      if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required" });
+      }
 
       const user = await User.findOne({ email }).select("+password");
       if (!user) {
