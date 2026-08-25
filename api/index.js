@@ -1,6 +1,6 @@
-const app = require("./app");
-const authRoutes = require("./routes/auth");
-const withDB = require("./middleware/db");
+const app = require("../src/app");
+const authRoutes = require("../src/routes/auth");
+const withDB = require("../src/middleware/db");
 
 app.use(withDB);
 app.use("/api/auth", authRoutes);
